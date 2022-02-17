@@ -1,15 +1,13 @@
 <template>
   <h2>Daily log sheet</h2>
   <div class="dropdownColor">
-    <select v-model="dropColor">
-      <option value="">Choose a color</option>
-      <option value="yellow">Yellow</option>
-      <option value="grey">Grey</option>
-      <option value="pink">Pink</option>
+    <select v-model="selectedColor">
+      <option value="" selected>Choose a color</option>
+      <option v-for="color in colors" :key="color" :value="color">{{ color }}</option>
     </select>
   </div>
   <div class="table-container">
-    <table :style="{backgroundColor: tableBgClr}">
+    <table :style="{backgroundColor: tableBackGroundColor}">
       <thead>
           <tr>
               <th>Date</th>
@@ -17,11 +15,11 @@
               <th>Section</th>
               <th>Git repo</th>
               <th>Progress</th>
-              <th :colspan="maxLenArr">Topic covered</th>
+              <th :colspan="findMaxLength">Topic covered</th>
           </tr>
       </thead>
       <tbody>
-          <tr v-for="user in users" :key="user.date">
+          <tr v-for="user in users" :key="user">
               <td>{{user.date}}</td>
               <td>{{user.day}}</td>
               <td>{{user.sections.toString()}}</td>
@@ -46,7 +44,8 @@ export default {
   name: 'App',
   data() {
       return {
-        dropColor: '',
+        selectedColor: '',
+        colors: ['yellow', 'grey', 'pink'],
         users: [
             {
               date: '01/02/2022',
@@ -68,23 +67,23 @@ export default {
       };
   },
   computed:{
-    maxLenArr(){
-      let len = 0;
+    findMaxLength(){
+      let maxLength = 0;
       this.users.forEach( obj => {
-        if(obj.topics.length > len){
-          len = obj.topics.length;
+        if(obj.topics.length > maxLength){
+          maxLength = obj.topics.length;
         }
       });
-      return len;
+      return maxLength;
     },
-    tableBgClr(){
-      if(this.dropColor === 'yellow'){
+    tableBackGroundColor(){
+      if(this.selectedColor === 'yellow'){
         return '#e0e0a4';
       }
-      else if(this.dropColor === 'grey'){
+      else if(this.selectedColor === 'grey'){
         return '#c7c7c7';
       }
-      else if(this.dropColor === 'pink'){
+      else if(this.selectedColor === 'pink'){
         return '#fbc3ed';
       }
       else{
